@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xml:lang="en"
+      xmlns:tal="http://xml.zope.org/namespaces/tal">
+  <head>
+    <title>${title}</title>
+    <metal:metadata define-slot="meta">
+    <meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/>
+    <meta name="keywords" content="pyramid python web application beer check-in foursquare twitter twitter-bootstrap" />
+    <meta name="description" content="Development of V2 of BeerLedge in Pyramid using MongoDB." />
+    <meta name="author" content="Josh Finnie"
+    <link rel="shortcut icon"
+          href="${request.static_url('beerledge:static/img/favicon.png')}" />
+
+    <!--[if lt IE 7]>
+    <div style='border: 1px solid #F7941D; background: #FEEFDA; text-align: center; clear: both; height: 75px; position: relative;'>
+      <div style='position: absolute; right: 3px; top: 3px; font-family: courier new; font-weight: bold;'>
+        <a href='#' onclick='javascript:this.parentNode.parentNode.style.display="none"; return false;'>
+          <img src='${request.static_url("beerledge:static/img/ie6nomore-cornerx.jpg")}' style='border: none;' alt='Close this notice'/>
+        </a>
+      </div>
+      <div style='width: 640px; margin: 0 auto; text-align: left; padding: 0; overflow: hidden; color: black;'>
+        <div style='width: 75px; float: left;'>
+          <img src='${request.static_url("beerledge:static/img/ie6-warning.jpg")}' alt='Warning!'/>
+        </div>
+        <div style='width: 275px; float: left; font-family: Arial, sans-serif;'>
+          <div style='font-size: 14px; font-weight: bold; margin-top: 12px;'>You are using an outdated browser</div>
+          <div style='font-size: 12px; margin-top: 6px; line-height: 12px;'>
+            For a better experience using this site, please upgrade to a modern web browser.
+          </div>
+        </div>
+        <div style='width: 75px; float: left;'>
+          <a href='http://www.firefox.com' target='_blank'>
+            <img src="${request.static_url('beerledge:static/img/browser_firefox.jpg')}" width="65" height="73" alt="Firefox"></a>
+        </div>
+        <div style='width: 75px; float: left;'>
+          <a href='http://windows.microsoft.com/en-us/internet-explorer/products/ie/home' target='_blank'>
+            <img src="${request.static_url('beerledge:static/img/browser_IE8.jpg')}" width="65" height="73" alt="IE8"></a>
+        </div>
+        <div style='width: 73px; float: left;'>
+          <a href='http://www.apple.com/safari/download/' target='_blank'>
+            <img src="${request.static_url('beerledge:static/img/browser_safari.jpg')}" width="65" height="73" alt="Safari"></a>
+        </div>
+        <div style='float: left;'>
+          <a href='http://www.google.com/chrome' target='_blank'>
+            <img src="${request.static_url('beerledge:static/img/browser_chrome.jpg')}" width="65" height="73" alt="Chrome"></a>
+        </div>
+      </div>
+    </div>
+    <![endif]--><!--[if lt IE 9]>
+    <script src="//html5shim.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+
+        <!-- Le styles -->
+    <link rel="stylesheet" href="${request.static_url('beerledge:static/css/bootstrap.css')}"
+          type="text/css"
+          media="screen"
+          charset="utf-8" />
+    <link rel="stylesheet" href="${request.static_url('beerledge:static/css/bootstrap-responsive.css.css')}"
+          type="text/css"
+          media="screen"
+          charset="utf-8" />
+    <link rel="stylesheet" href="${request.static_url('beerledge:static/css/main.css')}"
+          type="text/css"
+          media="screen"
+          charset="utf-8" />
+
+    <!-- Le fav and touch icons -->
+    <link rel="shortcut icon" href="${request.static_url('beerledge:static/img/favicon.ico')}">
+    <link rel="apple-touch-icon" href="${request.static_url('beerledge:static/img/apple-touch-icon.png')}">
+    <link rel="apple-touch-icon" sizes="72x72" href="${request.static_url('beerledge:static/img/apple-touch-icon-72x72.png')}">
+    <link rel="apple-touch-icon" sizes="114x114" href="${request.static_url('beerledge:static/img/apple-touch-icon-114x114.png')}">
+
+    <script src="//ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js" type="text/javascript"></script>
+  </head>
+  <body>
+    <!-- Primary navigation -->
+    <metal:navigation define-slot="primary-navigation">
+      <div class="navbar navbar-fixed-top">
+        <div class="navbar-inner">
+          <div class="container">
+            <a class="btn btn-navbar" data-toggle="collapse" data-target=".nav-collapse">
+              <span class="icon-bar"></span>
+              <span class="icon-bar"></span>
+              <span class="icon-bar"></span>
+            </a>
+            <a class="brand" href="${request.application_url}">BeerLedge - Dev</a>
+            <div class="nav-collapse">
+              <ul class="nav">
+                <li><a href="/about">About</a></li>
+                <li><a href="/contact">Contact</a></li>
+              </ul>
+              <p class="navbar-text pull-right" tal:condition="not logged_in">
+                <a href="/login" title="Log in">Log in</a> |
+                <a href="/signup" title="Register your account">Register your account</a>
+              </p>
+              <p class="navbar-text pull-right" tal:condition="logged_in">
+                <a href="/logout" title="Sign out">Sign out</a>
+              </p>
+            </div><!--/.nav-collapse -->
+          </div>
+        </div>
+      </div>
+    </metal:navigation><!-- primary-navigation -->
+
+    <div class="container">
+      <header class="jumbotron masthead">
+        <div class="inner">
+          <h1>BeerLedge</h1>
+          <p>Keep track of the beers you drink!</p>
+        </div>
+      </header>
+      <hr class='soften' />
+      <div class='main'> <!-- Main content area -->
+        <section class="content">
+          <tal:block tal:repeat="key ('error', 'success', 'warning', 'info')">
+            <tal:block tal:define="messages request.session.pop_flash(queue=key)"
+                       tal:condition="messages">
+              <tal:block tal:repeat="msg messages">
+                <div tal:attributes="class 'alert-message {} fade in'.format(key);
+                                     data-alert key">
+                  <a class="close" href="#">×</a>
+                  <p>${structure:msg}</p>
+                </div>
+              </tal:block>
+            </tal:block>
+          </tal:block>
+          <tal:block metal:define-slot="content">
+            <h2>Contact</h2>
+            <p>Contact me on <a href="//twitter.com/joshfinnie">Twitter</a>.
+          </tal:block>
+        </section>
+      </div> <!-- /main -->
+    <!--End content row-->
+
+    <hr class='soften'>
+      <footer class='footer'>
+      <p>&copy; 2012 Josh Finnie</p>
+      </footer>
+    </div> <!-- /container -->
+
+    <!-- Le javascript
+    ================================================== -->
+    <!-- Placed at the end of the document so the pages load faster -->
+    <script src="${request.static_url('beerledge:static/js/bootstrap-transition.js')}"></script>
+    <script src="${request.static_url('beerledge:static/js/bootstrap-alert.js')}"></script>
+    <script src="${request.static_url('beerledge:static/js/bootstrap-modal.js')}"></script>
+    <script src="${request.static_url('beerledge:static/js/bootstrap-dropdown.js')}"></script>
+    <script src="${request.static_url('beerledge:static/js/bootstrap-scrollspy.js')}"></script>
+    <script src="${request.static_url('beerledge:static/js/bootstrap-tab.js')}"></script>
+    <script src="${request.static_url('beerledge:static/js/bootstrap-tooltip.js')}"></script>
+    <script src="${request.static_url('beerledge:static/js/bootstrap-popover.js')}"></script>
+    <script src="${request.static_url('beerledge:static/js/bootstrap-button.js')}"></script>
+    <script src="${request.static_url('beerledge:static/js/bootstrap-collapse.js')}"></script>
+    <script src="${request.static_url('beerledge:static/js/bootstrap-carousel.js')}"></script>
+    <script src="${request.static_url('beerledge:static/js/bootstrap-typeahead.js')}"></script>
+  </body>
+</html>
